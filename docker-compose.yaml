@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fullstack-backend
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: production
+    networks:
+      - fullstack-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fullstack-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      FLASK_API_URL: http://backend:5000
+    networks:
+      - fullstack-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+networks:
+  fullstack-network:
+    driver: bridge
